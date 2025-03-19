@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @OpenAPI30
-@ComponentScan(basePackages = "whilter.ai.ads_manager.*")
+//@ComponentScan(basePackages = "whilter.ai.ads_manager.*")
 public class AdsManagerApplication {
 
 	public static void main(String[] args) {

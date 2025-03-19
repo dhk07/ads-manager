@@ -1,0 +1,26 @@
+server:
+  port: 8080
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 1126512495828404
+            client-secret: EAAQAjqEmHbQBOZBE5ITZBZCZB2dkkx8VRWhDFXbPS4kMMiNusWXIkzZAQALSd9dQWEwncrNVQsl3tDuVpwexxbztTuY9HMTtGQUWwLyB5wd0CWARCZB3qK5cMSIsOfVZCaMHPg2yapQjDlU5ucCeCReq5jJAWCZAlJzyiGmCIdYlDEPNGUWnzIxhEkLHpOwp8i08jQhA4tk3Ra4lMvmSNa9xGK2msXDWffKBhODKKLHq1IybKZBghVL4B
+            scope:
+              - email
+              - public_profile
+              - ads_management
+#              - ads_read
+              - business_management
+#              - instagram_basic
+#              - instagram_content_publish
+#              - pages_show_list
+#              - pages_read_engagement
+#              - instagram_manage_comments
+#              - instagram_manage_insights
+facebook:
+  api:
+    graph-version: v19.0
+    base-url: https://graph.facebook.com
