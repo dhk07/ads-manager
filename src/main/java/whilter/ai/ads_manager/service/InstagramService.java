@@ -25,8 +25,8 @@ public class InstagramService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String postToInstagram(String caption, String imageUrl) {
-        String containerCreationUrl = "https://graph.facebook.com/v17.0/17841473206015101/media";
-        String publishUrl = "https://graph.facebook.com/v17.0/17841473206015101/media_publish";
+        String containerCreationUrl = "https://graph.facebook.com/v22.0/17841473206015101/media";
+        String publishUrl = "https://graph.facebook.com/v22.0/17841473206015101/media_publish";
 //       businessId from curl- 592769137251519
         //        appId - 1126512495828404
 //        app secretId - 85aa53ccc4d1cac1df49f69d7b49ec18
