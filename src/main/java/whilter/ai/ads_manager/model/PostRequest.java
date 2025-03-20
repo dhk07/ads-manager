@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class PostRequest {
     private String content;
     private String accessToken;
+    private String imageUrl;
 }
 
