@@ -1,28 +1,58 @@
 package whilter.ai.ads_manager.controller;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.facebook.api.Post;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import whilter.ai.ads_manager.service.InstagramService;
+import whilter.ai.ads_manager.model.PostRequest;
+import whilter.ai.ads_manager.service.AuthenticationHandler;
+import whilter.ai.ads_manager.service.ContentCreationHandler;
+import whilter.ai.ads_manager.service.InstagramHandler;
+import whilter.ai.ads_manager.service.PostHandler;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/instagram")
+@RequestMapping("/instagram")
 public class InstagramController {
 
-    @Autowired
-    private InstagramService instagramService;
+    private final AuthenticationHandler authenticationHandler;
+    private final ContentCreationHandler contentCreationHandler;
+    private final PostHandler postHandler;
+
+    public InstagramController(
+            AuthenticationHandler authenticationHandler,
+            ContentCreationHandler contentCreationHandler,
+            PostHandler postHandler) {
+        this.authenticationHandler = authenticationHandler;
+        this.contentCreationHandler = contentCreationHandler;
+        this.postHandler = postHandler;
+    }
 
 //    @PostMapping("/post")
-//    public String postToInstagram(@RequestParam String caption, @RequestParam String imageUrl) {
-//        return instagramService.postToInstagram(caption, imageUrl);
+//    public ResponseEntity<?> post(@RequestBody PostRequest request) {
+//        log.info("Received post request: {}", request);
+//        InstagramHandler chain = (req, next) ->
+//                authenticationHandler.handle(req,
+//                        (nextReq, nextHandler) ->
+//                                contentCreationHandler.handle(nextReq,
+//                                        (finalReq, finalHandler) ->
+//                                                postHandler.handle(finalReq, null)));
+//
+//        chain.handle(request, null);
+//        return ResponseEntity.ok("Post request submitted");
 //    }
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, Instagram!";
-    }
-    @GetMapping("/postToInstagram")
-    public String postToInstagram(@RequestParam String caption, @RequestParam String imageUrl) {
-        System.out.println("Inside postToInstagram: caption: "+caption+" -----------> imageUrl: "+imageUrl);
-        return instagramService.postToInstagram(caption, imageUrl);
-    }
-}
+    @GetMapping("/post")
+    public ResponseEntity<?> postToInsta(@RequestBody PostRequest request){
+        log.info("Received request: {}", request);
+        InstagramHandler chain = (req, next) ->
+                authenticationHandler.handle(req,
+                        (nextReq, nextHandler) ->
+                                contentCreationHandler.handle(nextReq,
+                                        (finalReq, finalHandler) ->
+                                                postHandler.handle(finalReq, null)));
 
+        chain.handle(request, null);
+        return ResponseEntity.ok("Post request submitted");
+    }
+
+}
