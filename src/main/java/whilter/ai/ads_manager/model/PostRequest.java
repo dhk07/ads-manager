@@ -11,5 +11,7 @@ public class PostRequest {
     private String content;
     private String accessToken;
     private String imageUrl;
+    private String videoUrl;
+    private String mediaType;
 }
 

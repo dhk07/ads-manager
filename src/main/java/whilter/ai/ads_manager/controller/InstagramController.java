@@ -42,8 +42,8 @@ public class InstagramController {
 //    }
 
     @GetMapping("/post")
-    public ResponseEntity<?> postToInsta(@RequestParam String content, @RequestParam String imageUrl) {
-        log.info("Received request: {}", content);
+    public ResponseEntity<?> postToInstagram(@RequestParam String caption, @RequestParam String mediaUrl) {
+        log.info("Received request: {}", caption);
         InstagramHandler chain = (req, next) ->
                 authenticationHandler.handle(req,
                         (nextReq, nextHandler) ->
@@ -51,9 +51,7 @@ public class InstagramController {
                                         (finalReq, finalHandler) ->
                                                 postHandler.handle(finalReq, null)));
 
-        PostRequest request = new PostRequest();
-        request.setContent(content);
-        request.setImageUrl(imageUrl);
+        PostRequest request = postHandler.processRequest(caption, mediaUrl);
         chain.handle(request, null);
         return ResponseEntity.ok("Post request submitted");
     }
