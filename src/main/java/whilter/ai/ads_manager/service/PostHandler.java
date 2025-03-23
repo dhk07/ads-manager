@@ -1,11 +1,11 @@
 package whilter.ai.ads_manager.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import whilter.ai.ads_manager.model.PostRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @Component
@@ -24,14 +24,7 @@ public class PostHandler implements InstagramHandler {
 
         if (request.getImageUrl()==null || request.getImageUrl().isEmpty()) {
             try {
-                String videoUrl = request.getVideoUrl();
-//                String response = facebookClient.createVideoPost(instaBusinessIdString, videoUrl, caption, accessToken);
-
-                Map<String, Object> videoPostRequest = new HashMap<>();
-                videoPostRequest.put("media_type", "VIDEO");  // Important: Explicitly set media_type
-                videoPostRequest.put("video_url", videoUrl);
-                videoPostRequest.put("caption", caption);
-                videoPostRequest.put("access_token", accessToken);
+                var videoPostRequest = getStringObjectMap(request, caption, accessToken);
 
                 Map<String, Object> response = facebookClient.createVideoPost(instaBusinessIdString, videoPostRequest);
                 if (!response.containsKey("id")) {
@@ -45,14 +38,30 @@ public class PostHandler implements InstagramHandler {
             }
         } else {
             try {
-                String imageUrl = request.getImageUrl();
-                Map<String, Object> response = facebookClient.createPost(instaBusinessIdString, caption, imageUrl, accessToken);
+                Map<String, Object> imagePostRequest = new HashMap<>();
+                imagePostRequest.put("image_url", request.getImageUrl());
+                imagePostRequest.put("caption", caption);
+                imagePostRequest.put("access_token", accessToken);
+
+                Map<String, Object> response = facebookClient.createPost(instaBusinessIdString, imagePostRequest);
                 Map<String, Object> publishResponse = publishMedia(response, accessToken);
 
             } catch (Exception e) {
                 System.err.println("Video Post failed: " + e.getMessage());
             }
         }
+    }
+
+    private static Map<String, Object> getStringObjectMap(PostRequest request, String caption, String accessToken) {
+        String videoUrl = request.getVideoUrl();
+//                String response = facebookClient.createVideoPost(instaBusinessIdString, videoUrl, caption, accessToken);
+
+        Map<String, Object> videoPostRequest = new HashMap<>();
+        videoPostRequest.put("media_type", "REELS");  // Important: Explicitly set media_type
+        videoPostRequest.put("video_url", videoUrl);
+        videoPostRequest.put("caption", caption);
+        videoPostRequest.put("access_token", accessToken);
+        return videoPostRequest;
     }
 
     private Map<String, Object> publishMedia(Map<String, Object> response, String accessToken){
@@ -63,6 +72,21 @@ public class PostHandler implements InstagramHandler {
 //            Map jsonMap = objectMapper.readValue(response, Map.class);
             String creationId = (String) response.get("id");
             System.out.println("Container created successfully. ContainerID: " + creationId);
+            String status;
+            do {
+                // ✅ Check the media status
+                Map<String, Object> statusResponse = facebookClient.getMediaStatus(creationId,  "Bearer " + accessToken);
+                status = (String) statusResponse.get("status_code");
+
+                if ("FINISHED".equals(status)) {
+                    System.out.println("Media status: " + status);
+                    break;
+                }
+
+                // ✅ Wait 5 seconds before checking again
+                TimeUnit.SECONDS.sleep(5);
+                System.out.println("Media status: " + status);
+            } while ("IN_PROGRESS".equals(status));
 
             Map<String, Object> publishRequest = new HashMap<>();
             publishRequest.put("creation_id", creationId);
