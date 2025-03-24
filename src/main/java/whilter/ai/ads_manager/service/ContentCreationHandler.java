@@ -7,7 +7,7 @@ import whilter.ai.ads_manager.model.PostRequest;
 public class ContentCreationHandler implements InstagramHandler {
 
     @Override
-    public void handle(PostRequest request, InstagramHandler next) {
+    public String handle(PostRequest request, InstagramHandler next) {
         if (request.getAccessToken() == null) {
             throw new RuntimeException("No access token available");
         }
@@ -20,6 +20,7 @@ public class ContentCreationHandler implements InstagramHandler {
         if (next != null) {
             next.handle(request, null);
         }
+        return content;
     }
 }
 

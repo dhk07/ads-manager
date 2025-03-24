@@ -24,25 +24,11 @@ public interface FacebookClient {
     @PostMapping("/{igUserId}/media")
     Map<String, Object> createPost(@PathVariable("igUserId") String igUserId, @RequestBody Map<String, Object> requestBody);
 
-//    @PostMapping("/{igUserId}/media")
-//    String createVideoPost(@PathVariable("igUserId") String igUserId,
-//                           @RequestParam("video_url") String videoUrl,
-//                           @RequestParam("caption") String caption,
-//                           @RequestParam("access_token") String accessToken);
-
-//    @PostMapping("/{igUserId}/media_publish")
-//    String publishMedia(@PathVariable("igUserId") String igUserId,
-//                        @RequestParam("creation_id") String creationId,
-//                        @RequestParam("access_token") String accessToken);
-
     @PostMapping("/{igUserId}/media")
     Map<String, Object> createVideoPost(@PathVariable("igUserId") String igUserId, @RequestBody Map<String, Object> requestBody);
 
     @PostMapping("/{igUserId}/media_publish")
     Map<String, Object> publishMedia(@PathVariable("igUserId") String igUserId, @RequestBody Map<String, Object> requestBody);
-
-//    @GetMapping("/{media_id}?fields=status_code")
-//    Map<String, Object> getMediaStatus(@PathVariable("media_id") String mediaId, @RequestParam String accessToken);
 
     @GetMapping("/{mediaId}?fields=status_code")
     Map<String, Object> getMediaStatus(@PathVariable("mediaId") String mediaId,

@@ -3,7 +3,6 @@ package whilter.ai.ads_manager.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Component;
-import whilter.ai.ads_manager.model.OAuthToken;
 import whilter.ai.ads_manager.model.PostRequest;
 import whilter.ai.ads_manager.repository.OAuthTokenRepository;
 
@@ -20,7 +19,7 @@ public class AuthenticationHandler implements InstagramHandler {
     }
 
     @Override
-    public void handle(PostRequest request, InstagramHandler next) {
+    public String handle(PostRequest request, InstagramHandler next) {
 //        OAuthToken token = tokenRepository.findByProvider("facebook")
 //                .orElseThrow(() -> new RuntimeException("No valid access token found"));
 //
@@ -29,6 +28,7 @@ public class AuthenticationHandler implements InstagramHandler {
         if (next != null) {
             next.handle(request, null);
         }
+        return null;
     }
 }
 

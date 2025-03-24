@@ -1,7 +1,6 @@
 package whilter.ai.ads_manager.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.facebook.api.Post;
 import org.springframework.web.bind.annotation.*;
 import whilter.ai.ads_manager.model.PostRequest;
 import whilter.ai.ads_manager.service.AuthenticationHandler;
@@ -26,20 +25,6 @@ public class InstagramController {
         this.contentCreationHandler = contentCreationHandler;
         this.postHandler = postHandler;
     }
-
-//    @PostMapping("/post")
-//    public ResponseEntity<?> post(@RequestBody PostRequest request) {
-//        log.info("Received post request: {}", request);
-//        InstagramHandler chain = (req, next) ->
-//                authenticationHandler.handle(req,
-//                        (nextReq, nextHandler) ->
-//                                contentCreationHandler.handle(nextReq,
-//                                        (finalReq, finalHandler) ->
-//                                                postHandler.handle(finalReq, null)));
-//
-//        chain.handle(request, null);
-//        return ResponseEntity.ok("Post request submitted");
-//    }
 
     @GetMapping("/post")
     public ResponseEntity<?> postToInstagram(@RequestParam String caption, @RequestParam String mediaUrl) {
