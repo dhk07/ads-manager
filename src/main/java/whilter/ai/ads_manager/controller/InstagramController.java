@@ -17,6 +17,7 @@ public class InstagramController {
     private final ContentCreationHandler contentCreationHandler;
     private final PostHandler postHandler;
 
+
     public InstagramController(
             AuthenticationHandler authenticationHandler,
             ContentCreationHandler contentCreationHandler,
@@ -30,11 +31,9 @@ public class InstagramController {
     public ResponseEntity<?> postToInstagram(@RequestParam String caption, @RequestParam String mediaUrl) {
         log.info("Received request: {}", caption);
         InstagramHandler chain = (req, next) ->
-                authenticationHandler.handle(req,
-                        (nextReq, nextHandler) ->
-                                contentCreationHandler.handle(nextReq,
-                                        (finalReq, finalHandler) ->
-                                                postHandler.handle(finalReq, null)));
+                authenticationHandler.handle(req, (nextReq, nextHandler) ->
+                        contentCreationHandler.handle(nextReq, (finalReq, finalHandler) ->
+                                postHandler.handle(finalReq, null)));
 
         PostRequest request = postHandler.processRequest(caption, mediaUrl);
         chain.handle(request, null);

@@ -1,4 +1,4 @@
-package whilter.ai.ads_manager.service;
+package whilter.ai.ads_manager.enums;
 
 public enum MediaType {
     IMAGE,
