@@ -2,6 +2,7 @@ package whilter.ai.ads_manager.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import whilter.ai.ads_manager.enums.MediaType;
 import whilter.ai.ads_manager.model.PostRequest;
 
 import java.util.HashMap;
