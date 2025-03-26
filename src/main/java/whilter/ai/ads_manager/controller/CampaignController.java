@@ -54,9 +54,9 @@ public class CampaignController {
     }
 
     @PostMapping("/createAds")
-    public ResponseEntity<?> createAds(@RequestBody AdRequest request, @RequestParam String adSetId) {
+    public ResponseEntity<?> createAds(@RequestBody AdRequest request, @RequestParam String adSetId, @RequestParam String creativeId) {
         log.info("Inside createAds: {}", request);
-        CampaignResponse response = adsHandler.callCreateAd(request, adSetId);
+        CampaignResponse response = adsHandler.callCreateAd(request, adSetId, creativeId);
         return ResponseEntity.ok(response);
     }
 

@@ -12,5 +12,5 @@ public interface AdsHandler {
     CampaignResponse callCreateCampaign(CampaignRequest request);
     CampaignResponse callCreateAdSets(AdSetRequest request, String campaignId);
     CampaignResponse callCreateAdCreative(AdCreative request);
-    CampaignResponse callCreateAd(AdRequest request, String adSetId);
+    CampaignResponse callCreateAd(AdRequest request, String adSetId, String adCreativeId);
 }

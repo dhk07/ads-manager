@@ -7,6 +7,6 @@ import lombok.Data;
 public class AdRequest {
     private String name;
 //    private String adSetId;
-    private Creative creative;
+//    private Creative creative;
     private String status;
 }

@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import whilter.ai.ads_manager.enums.BidStrategy;
-import whilter.ai.ads_manager.enums.CampaignStatus;
 import whilter.ai.ads_manager.model.AdCreative;
 import whilter.ai.ads_manager.model.AdRequest;
 import whilter.ai.ads_manager.model.AdSetRequest;
 import whilter.ai.ads_manager.model.Campaign;
 import whilter.ai.ads_manager.model.CampaignRequest;
 import whilter.ai.ads_manager.model.CampaignResponse;
-import whilter.ai.ads_manager.model.Creative;
 import whilter.ai.ads_manager.model.FacebookInterestResponse;
 import whilter.ai.ads_manager.model.ObjectStorySpec;
 import whilter.ai.ads_manager.model.Targeting;
@@ -50,7 +48,7 @@ public class CampaignHandler implements AdsHandler{
             String adCreativeId = campaignResponse.getId();
             log.info("AdCreative created successfully with id: {}" , adCreativeId);
 
-            campaignResponse = callCreateAd(request.getAdRequest(), adSetId);
+            campaignResponse = callCreateAd(request.getAdRequest(), adSetId, adCreativeId);
             String adId = campaignResponse.getId();
             log.info("Ad created successfully with id: {}" , adId);
             return "Campaign created with ID: " + campaignId + ", AdSet ID: " + adSetId + ", Ad ID: " + adId;
@@ -66,7 +64,7 @@ public class CampaignHandler implements AdsHandler{
 //        campaignRequest.put("adAccountId", adAccountId);
         campaignRequest.put("name", request.getCampaignName());
         campaignRequest.put("objective", request.getObjective());
-        campaignRequest.put("status", CampaignStatus.PAUSED);
+        campaignRequest.put("status", request.getStatus());
         campaignRequest.put("access_token", accessToken);
         campaignRequest.put("special_ad_categories", request.getSpecialAdCategories());
         log.info("campaignRequest: {}", campaignRequest);
@@ -146,21 +144,21 @@ public class CampaignHandler implements AdsHandler{
 //        return facebookClient.createAdCreative(adAccountId, adCreativeRequest);
 //    }
 
-    public CampaignResponse callCreateAd(AdRequest request, String adSetId) {
+    public CampaignResponse callCreateAd(AdRequest request, String adSetId, String adCreativeId) {
         Map<String, Object> adRequest = new HashMap<>();
 //        adRequest.put("adAccountId", adAccountId);
         adRequest.put("name", request.getName());
         adRequest.put("adset_id", adSetId);
-        adRequest.put("creative", getCreativeId(request.getCreative()));
-        adRequest.put("status", CampaignStatus.ACTIVE);
+        adRequest.put("creative", getCreativeId(adCreativeId));
+        adRequest.put("status", request.getStatus());
         adRequest.put("access_token", accessToken);
         log.info("adRequest: {}", adRequest);
         return facebookClient.createAd(adAccountId, adRequest);
     }
 
-    private Object getCreativeId(Creative creativeIds) {
+    private Object getCreativeId(String creativeIds) {
         Map<String, Object> creativeRequest = new HashMap<>();
-        creativeRequest.put("creative_id", creativeIds.getCreativeId());
+        creativeRequest.put("creative_id", creativeIds);
         return creativeRequest;
     }
 }
