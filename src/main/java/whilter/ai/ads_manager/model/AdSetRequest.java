@@ -7,7 +7,7 @@ import lombok.Data;
 public class AdSetRequest {
     private String name;
 //    private String campaignId;
-    private float dailyBudget;
+    private int dailyBudget;
     private String billingEvent;
     private String optimizationGoal;
     private String status;

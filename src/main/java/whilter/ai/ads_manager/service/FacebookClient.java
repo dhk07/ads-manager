@@ -1,6 +1,7 @@
 package whilter.ai.ads_manager.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +52,13 @@ public interface FacebookClient {
     FacebookInterestResponse getInterestIds(@RequestParam("type") String type,
                                             @RequestParam("q") String query,
                                             @RequestParam("access_token") String accessToken);
-
+    @GetMapping("/oauth/access_token")
+    ResponseEntity<Map<String, Object>> exchangeForLongLivedToken(
+            @RequestParam("grant_type") String grantType,
+            @RequestParam("client_id") String clientId,
+            @RequestParam("client_secret") String clientSecret,
+            @RequestParam("fb_exchange_token") String shortLivedToken
+    );
 
 }
 

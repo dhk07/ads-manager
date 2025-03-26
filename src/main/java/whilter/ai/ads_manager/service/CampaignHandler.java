@@ -25,12 +25,14 @@ import java.util.Map;
 @Component
 public class CampaignHandler implements AdsHandler{
 
+    private final AccessTokenService accessTokenService;
     private final FacebookClient facebookClient;
-    private final String adAccountId = "648823421112366";
-    @Value("${spring.security.oauth2.client.registration.facebook.client-secret}")
-    private String accessToken;
 
-    public CampaignHandler(FacebookClient facebookClient) {
+    @Value("${application.facebook.ad-account-id}")
+    private  String adAccountId;
+
+    public CampaignHandler(AccessTokenService accessTokenService, FacebookClient facebookClient) {
+        this.accessTokenService = accessTokenService;
         this.facebookClient = facebookClient;
     }
 
@@ -65,7 +67,7 @@ public class CampaignHandler implements AdsHandler{
         campaignRequest.put("name", request.getCampaignName());
         campaignRequest.put("objective", request.getObjective());
         campaignRequest.put("status", request.getStatus());
-        campaignRequest.put("access_token", accessToken);
+        campaignRequest.put("access_token", accessTokenService.getValidAccessToken("Facebook"));
         campaignRequest.put("special_ad_categories", request.getSpecialAdCategories());
         log.info("campaignRequest: {}", campaignRequest);
         return facebookClient.createCampaign(adAccountId, campaignRequest);
@@ -79,7 +81,7 @@ public class CampaignHandler implements AdsHandler{
         adSetRequest.put("campaign_id", campaignId);
         adSetRequest.put("daily_budget", request.getDailyBudget());
         adSetRequest.put("targeting", getTargetingData(request.getTargeting()));
-        adSetRequest.put("access_token", accessToken);
+        adSetRequest.put("access_token", accessTokenService.getValidAccessToken("Facebook"));
         adSetRequest.put("billing_event", request.getBillingEvent());
         adSetRequest.put("optimization_goal", request.getOptimizationGoal());
         adSetRequest.put("status", request.getStatus());
@@ -93,7 +95,7 @@ public class CampaignHandler implements AdsHandler{
         List<String> interstIdList = new ArrayList<>();
         Map<String, Object> targetingRequest = new HashMap<>();
         for (String interest : targeting.getInterests()) {
-            FacebookInterestResponse response = facebookClient.getInterestIds("adinterest", interest, accessToken);
+            FacebookInterestResponse response = facebookClient.getInterestIds("adinterest", interest, accessTokenService.getValidAccessToken("Facebook"));
             if (response != null && response.getData() != null && !response.getData().isEmpty()) {
                 CampaignResponse firstInterest = response.getData().getFirst();
                 if (firstInterest.getId() != null) {
@@ -112,7 +114,7 @@ public class CampaignHandler implements AdsHandler{
         Map<String, Object> adCreativeRequest = new HashMap<>();
         adCreativeRequest.put("name", request.getName());
         adCreativeRequest.put("object_story_spec", createObjectStorySpec(request.getObjectStorySpec()));
-        adCreativeRequest.put("access_token", accessToken);
+        adCreativeRequest.put("access_token", accessTokenService.getValidAccessToken("Facebook"));
 
         log.info("adCreativeRequest: {}", adCreativeRequest);
         return facebookClient.createAdCreative(adAccountId, adCreativeRequest);
@@ -151,7 +153,7 @@ public class CampaignHandler implements AdsHandler{
         adRequest.put("adset_id", adSetId);
         adRequest.put("creative", getCreativeId(adCreativeId));
         adRequest.put("status", request.getStatus());
-        adRequest.put("access_token", accessToken);
+        adRequest.put("access_token", accessTokenService.getValidAccessToken("Facebook"));
         log.info("adRequest: {}", adRequest);
         return facebookClient.createAd(adAccountId, adRequest);
     }
