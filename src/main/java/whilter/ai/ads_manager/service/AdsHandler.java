@@ -13,5 +13,4 @@ public interface AdsHandler {
     CampaignResponse callCreateAdSets(AdSetRequest request, String campaignId);
     CampaignResponse callCreateAdCreative(AdCreative request);
     CampaignResponse callCreateAd(AdRequest request, String adSetId);
-    CampaignResponse callCreateAdCreativeForInstagram(AdCreative request);
 }

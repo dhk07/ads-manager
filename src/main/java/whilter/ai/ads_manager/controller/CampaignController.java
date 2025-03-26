@@ -49,7 +49,7 @@ public class CampaignController {
     @PostMapping("/createAdCreative")
     public ResponseEntity<?> createAdCreative(@RequestBody AdCreative adCreativeRequest) {
         log.info("Inside createAdCreative: {}", adCreativeRequest);
-        CampaignResponse response = adsHandler.callCreateAdCreativeForInstagram(adCreativeRequest);
+        CampaignResponse response = adsHandler.callCreateAdCreative(adCreativeRequest);
         return ResponseEntity.ok(response);
     }
 

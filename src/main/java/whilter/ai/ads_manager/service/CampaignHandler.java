@@ -114,7 +114,7 @@ public class CampaignHandler implements AdsHandler{
         Map<String, Object> adCreativeRequest = new HashMap<>();
         adCreativeRequest.put("name", request.getName());
         adCreativeRequest.put("object_story_spec", createObjectStorySpec(request.getObjectStorySpec()));
-        adCreativeRequest.put("page_id", request.getObjectStorySpec());
+        adCreativeRequest.put("access_token", accessToken);
 
         log.info("adCreativeRequest: {}", adCreativeRequest);
         return facebookClient.createAdCreative(adAccountId, adCreativeRequest);
@@ -137,14 +137,14 @@ public class CampaignHandler implements AdsHandler{
         return videoRequest;
     }
 
-    public CampaignResponse callCreateAdCreativeForInstagram(AdCreative request) {
-        Map<String, Object> adCreativeRequest = new HashMap<>();
-        adCreativeRequest.put("name", request.getName());
-        adCreativeRequest.put("object_story_id", request.getObjectStorySpec());
-        adCreativeRequest.put("access_token", accessToken);
-        log.info("callCreateAdCreativeForInstagram: {}", adCreativeRequest);
-        return facebookClient.createAdCreative(adAccountId, adCreativeRequest);
-    }
+//    public CampaignResponse callCreateAdCreativeForInstagram(AdCreative request) {
+//        Map<String, Object> adCreativeRequest = new HashMap<>();
+//        adCreativeRequest.put("name", request.getName());
+//        adCreativeRequest.put("object_story_id", request.getObjectStorySpec());
+//        adCreativeRequest.put("access_token", accessToken);
+//        log.info("callCreateAdCreativeForInstagram: {}", adCreativeRequest);
+//        return facebookClient.createAdCreative(adAccountId, adCreativeRequest);
+//    }
 
     public CampaignResponse callCreateAd(AdRequest request, String adSetId) {
         Map<String, Object> adRequest = new HashMap<>();
