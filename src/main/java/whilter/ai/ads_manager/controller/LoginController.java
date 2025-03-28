@@ -1,7 +1,6 @@
 package whilter.ai.ads_manager.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +31,11 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @GetMapping("/login")
-//    public String login(Model model) {
-//        model.addAttribute("customer", new CustomerRegistrationDto());
-//        return "login";
-//    }
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("customer", new CustomerRegistrationDto());
+        return "login";
+    }
 
     @PostMapping("/login")
     public String loginProcess(@RequestParam String username,
