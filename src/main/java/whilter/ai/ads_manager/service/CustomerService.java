@@ -115,4 +115,10 @@ public class CustomerService implements UserDetailsService {
         customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
+
+    public boolean validateCustomer(String userName, String password) {
+
+        Customer customer = customerRepository.validateCustomer(userName, password);
+        return customer != null;
+    }
 }

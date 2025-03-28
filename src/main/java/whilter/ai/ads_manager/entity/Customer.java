@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString(exclude = {"facebookProfile", "instagramProfile"}) // Prevent recursion
 @EqualsAndHashCode(exclude = {"facebookProfile", "instagramProfile"}) // Prevent recursion
 @Entity
-@Table(name = "cutomers")
+@Table(name = "customers")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,12 +1,9 @@
 package whilter.ai.ads_manager.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -28,8 +25,8 @@ public class LoginController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -37,31 +34,21 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String loginProcess(@RequestParam String username,
+    @PostMapping("/validateLogin")
+    public String loginProcess(@RequestParam String userName,
                                @RequestParam String password,
                                Model model,
-                               HttpServletRequest request) {
-        try {
-            // Attempt to authenticate the user
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(username, password);
-            Authentication authentication = authenticationManager.authenticate(authToken);
-
-            // If authentication is successful, set the security context
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Redirect to dashboard
-            return "redirect:/dashboard";
-        } catch (BadCredentialsException e) {
-            // Add error message for invalid credentials
-            model.addAttribute("error", "Invalid username or password");
-            return "login";
-        } catch (Exception e) {
-            // Handle other potential authentication errors
-            model.addAttribute("error", "Authentication failed");
+                               HttpSession httpSession) {
+        log.info("Inside validateLogin endpoint: ");
+        model.addAttribute("userName", userName);
+        if(!customerService.validateCustomer(userName, password)){
+            model.addAttribute("loginError", "UserName or Password invalid.");
             return "login";
         }
+//        model.addAttribute("loginError", "");
+        httpSession.setAttribute("userName", userName);
+        log.info("Welcome : {}", userName);
+        return "dashboard";
     }
 
     @GetMapping("/register")
@@ -71,7 +58,7 @@ public class LoginController {
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/registerCustomer")
     public String registerCustomer(@Valid @ModelAttribute("customer") CustomerRegistrationDto customerDto,
                                    BindingResult bindingResult,
                                    Model model) {
