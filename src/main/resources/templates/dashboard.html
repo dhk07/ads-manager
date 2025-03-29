@@ -14,15 +14,16 @@
             <div class="row">
                 <div class="col-md-6">
                     <h4>User Details</h4>
-                    <p><strong>Username:</strong> <span th:text="${username}">Username</span></p>
-                    <p><strong>Email:</strong> <span th:text="${email}">Email</span></p>
-                    <p><strong>Authentication Provider:</strong> <span th:text="${authProvider}">Provider</span></p>
+                    <p><strong>Username:</strong> <span th:text="${existingCustomer.userName}">Username</span></p>
+                    <p><strong>Email:</strong> <span th:text="${existingCustomer.email}">Email</span></p>
+                    <p><strong>Company Name:</strong> <span th:text="${existingCustomer.companyName}">Provider</span></p>
                 </div>
                 <div class="col-md-6">
                     <h4>Quick Actions</h4>
                     <div class="list-group">
-                        <a href="/profile" class="list-group-item list-group-item-action">Edit Profile</a>
-                        <a href="/settings" class="list-group-item list-group-item-action">Account Settings</a>
+                        <a href="/change-password" class="list-group-item list-group-item-action">Change Password</a>
+                        <a href="/customer/profile" class="list-group-item list-group-item-action">Edit Profile</a>
+<!--                        <a href="/settings" class="list-group-item list-group-item-action">Account Settings</a>-->
                         <a href="/logout" class="list-group-item list-group-item-action list-group-item-danger">Logout</a>
                     </div>
                 </div>

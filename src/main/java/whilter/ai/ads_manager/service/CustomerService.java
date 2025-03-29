@@ -1,9 +1,8 @@
 package whilter.ai.ads_manager.service;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,11 +12,11 @@ import whilter.ai.ads_manager.model.CustomerRegistrationDto;
 import whilter.ai.ads_manager.repository.CustomerRepository;
 import whilter.ai.ads_manager.utility.PasswordValidator;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
-public class CustomerService implements UserDetailsService {
+public class CustomerService{
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -26,14 +25,14 @@ public class CustomerService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Customer registerNewCustomer(CustomerRegistrationDto registrationDto) {
+    public void registerNewCustomer(CustomerRegistrationDto registrationDto) {
         // Validate password
         if (!PasswordValidator.isValid(registrationDto.getPassword())) {
             throw new IllegalArgumentException(PasswordValidator.getPasswordValidationMessage());
         }
 
         // Check if username or email already exists
-        if (customerRepository.existsByUserName(registrationDto.getUsername())) {
+        if (customerRepository.existsByUserName(registrationDto.getUserName())) {
             throw new RuntimeException("Username already exists");
         }
         if (customerRepository.existsByEmailId(registrationDto.getEmail())) {
@@ -42,53 +41,23 @@ public class CustomerService implements UserDetailsService {
 
         // Create new customer
         Customer customer = new Customer();
-        customer.setUserName(registrationDto.getUsername());
+        customer.setUserName(registrationDto.getUserName());
         customer.setEmailId(registrationDto.getEmail());
         customer.setFirstName(registrationDto.getFirstName());
         customer.setLastName(registrationDto.getLastName());
         customer.setPhoneNumber(registrationDto.getPhoneNumber());
+        customer.setCreatedAt(Instant.now());
+        customer.setCompanyName(registrationDto.getCompanyName());
 
         // Encode and save password
         customer.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
 
-        return customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
-    @Transactional
-    public Customer processOAuthPostLogin(String username, String email, String providerCustomerId, String provider) {
-        Optional<Customer> existCustomer = customerRepository.findByEmailId(email);
+    public Optional<Customer> loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (existCustomer.isPresent()) {
-            // Update existing customer with provider details
-            Customer customer = existCustomer.get();
-            customer.setProviderName(provider);
-//            customer.setProviderCustomerId(providerCustomerId);
-            return customerRepository.save(customer);
-        } else {
-            // Create new customer
-            Customer newCustomer = new Customer();
-            newCustomer.setUserName(username);
-            newCustomer.setEmailId(email);
-            newCustomer.setProviderName(provider);
-//            newCustomer.setProviderCustomerId(providerCustomerId);
-
-            // Generate a random password for OAuth customers
-            newCustomer.setPassword(passwordEncoder.encode(java.util.UUID.randomUUID().toString()));
-
-            return customerRepository.save(newCustomer);
-        }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
-
-        return new org.springframework.security.core.userdetails.User(
-                customer.getUserName(),
-                customer.getPassword(),
-                new ArrayList<>()
-        );
+        return customerRepository.findByUserName(username);
     }
 
     public Optional<Customer> findByUsername(String username) {
@@ -116,9 +85,22 @@ public class CustomerService implements UserDetailsService {
         customerRepository.save(customer);
     }
 
-    public boolean validateCustomer(String userName, String password) {
+    public boolean validateCustomer(String enteredPassword, String password) {
 
-        Customer customer = customerRepository.validateCustomer(userName, password);
-        return customer != null;
+        return passwordEncoder.matches(enteredPassword, password);
+    }
+
+    public void updateCustomerDetails(@Valid CustomerRegistrationDto customerDto) {
+        customerRepository.findByUserName(customerDto.getUserName())
+                .ifPresentOrElse(customer -> {
+                    customer.setEmailId(customerDto.getEmail());
+                    customer.setFirstName(customerDto.getFirstName());
+                    customer.setLastName(customerDto.getLastName());
+                    customer.setPhoneNumber(customerDto.getPhoneNumber());
+                    customer.setCompanyName(customerDto.getCompanyName());
+                    customerRepository.save(customer);
+                }, () -> {
+                    throw new UsernameNotFoundException("Customer not found");
+                });
     }
 }

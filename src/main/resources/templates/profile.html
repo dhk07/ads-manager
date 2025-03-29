@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile|Edit</title>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h3 class="text-center">Edit Customer Details</h3>
+  </div>
+  <div class="card-body">
+    <!-- Display global error message -->
+    <div th:if="${updateError}" class="alert alert-danger">
+      <span th:text="${updateError}"></span>
+    </div>
+
+    <form th:action="@{/customer/update}" th:object="${customerDto}" method="post">
+      <!-- First Name -->
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName"
+               th:field="*{firstName}" required>
+      </div>
+
+      <!-- Last Name -->
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName"
+               th:field="*{lastName}" required>
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="userName" class="form-label">Username</label>
+        <input type="text" class="form-control" id="userName"
+               th:field="*{userName}" required>
+      </div>
+
+      <!-- Email (Non-editable) -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email"
+               th:field="*{email}" readonly>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number (Optional)</label>
+        <input type="tel" class="form-control" id="phoneNumber"
+               th:field="*{phoneNumber}">
+      </div>
+      <!-- Company Name -->
+      <div class="mb-3">
+        <label for="companyName" class="form-label">Company Name</label>
+        <input type="text" class="form-control" id="companyName"
+               th:field="*{companyName}" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Update Details</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

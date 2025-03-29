@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @ToString(exclude = {"facebookProfile", "instagramProfile"}) // Prevent recursion
@@ -34,8 +36,9 @@ public class Customer {
 
     private String password;
 
-    private String providerName;
+    private String companyName;
 
+    private Instant createdAt;
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private FacebookProfile facebookProfile;
 

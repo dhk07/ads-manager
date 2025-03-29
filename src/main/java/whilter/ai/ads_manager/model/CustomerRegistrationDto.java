@@ -9,13 +9,13 @@ import lombok.Data;
 public class CustomerRegistrationDto {
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters")
-    private String username;
+    private String userName;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Password is required")
+//    @NotBlank(message = "Password is required")
     private String password;
 
     @NotBlank(message = "First name is required")
@@ -23,6 +23,9 @@ public class CustomerRegistrationDto {
 
     @NotBlank(message = "Last name is required")
     private String lastName;
+
+    @NotBlank(message = "Company name is required")
+    private String companyName;
 
     private String phoneNumber;
 }
