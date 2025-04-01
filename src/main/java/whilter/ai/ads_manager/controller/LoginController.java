@@ -4,9 +4,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import whilter.ai.ads_manager.entity.Customer;
 import whilter.ai.ads_manager.model.CustomerRegistrationDto;
 import whilter.ai.ads_manager.service.CustomerService;
@@ -31,6 +30,9 @@ public class LoginController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Value("${application.facebook.callbackUrl}")
+    private String facebookCallBackUrl;
 
 //    @Autowired
 //    private AuthenticationManager authenticationManager;
@@ -54,7 +56,7 @@ public class LoginController {
                                HttpSession httpSession) {
         log.info("Inside validateLogin endpoint: ");
         model.addAttribute("userName", userName);
-        Optional<Customer> existingCustomer = customerService.loadUserByUsername(userName);
+        Optional<Customer> existingCustomer = customerService.findByUsername(userName);
         if(existingCustomer.isEmpty()){
             model.addAttribute("error", "User does not exist in our system.");
             return "login";
@@ -63,9 +65,10 @@ public class LoginController {
             model.addAttribute("error", "Password is invalid.");
             return "login";
         }
-        CustomerRegistrationDto customerDto = Utils.customerToCustomerDto(existingCustomer.get());
+        CustomerRegistrationDto customerDto = Utils.customerToCustomerDto(existingCustomer.get(), facebookCallBackUrl);
         httpSession.setAttribute("existingCustomer", customerDto);
         model.addAttribute("existingCustomer", customerDto);
+        httpSession.setAttribute("userId", existingCustomer.get().getId());
         log.info("Welcome : {}", existingCustomer);
         return "dashboard";
     }

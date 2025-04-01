@@ -1,4 +1,4 @@
-package whilter.ai.ads_manager.model;
+package whilter.ai.ads_manager.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

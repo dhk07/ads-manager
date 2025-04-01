@@ -30,6 +30,51 @@
             </div>
         </div>
     </div>
+    <div class="container mt-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Linked Accounts</h3>
+            </div>
+<!--            <h1 class="text-2xl font-bold mb-4" th:text="'Welcome ' + ${userName}"></h1>-->
+            <table class="w-full border-collapse border border-gray-300">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="border border-gray-300 px-1 py-2">S.No.</th>
+                        <th class="border border-gray-300 px-3 py-2">Site Name</th>
+                        <th class="border border-gray-300 px-2 py-2">Linked status</th>
+                        <th class="border border-gray-300 px-1 py-2">Fetch data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item, loop : ${existingCustomer.dashboardList}">
+                        <td class="border border-gray-300 px-4 py-2" th:text="${loop.count}"></td>
+                        <td class="border border-gray-300 px-4 py-2" th:text="${item.siteName}"></td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <form th:action="@{${item.callBackUrl}}" method="post">
+                                <input type="hidden" name="siteName" th:value="${item.siteName}" />
+                                <input type="hidden" name="userId" th:value="${item.userId}" />
+                                <button th:if="${!item.linkedStatus}" type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">
+                                    Link account
+                                </button>
+                                <span th:unless="${!item.linkedStatus}" class="text-green-500 font-bold">Account linked</span>
+                            </form>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <div class="mt-6 text-center" th:if="${item.linkedStatus}">
+                                <a th:href="@{/view-details (siteName=${item.siteName}, userId=${item.userId})}"
+                                   class="w-full py-2 text-red bg-green-600 rounded-xl hover:bg-green-700 flex items-center justify-center gap-2">
+                                    View Posts
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(existingCustomer.dashboardList)}">
+                        <td class="border border-gray-300 px-4 py-2 text-center" colspan="4">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

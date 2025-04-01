@@ -28,7 +28,7 @@ public class InstagramProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String facebookId;
+    private String instagramId;
 
     private String emailId;
 

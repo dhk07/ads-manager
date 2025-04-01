@@ -2,27 +2,39 @@ package whilter.ai.ads_manager.service;
 
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import whilter.ai.ads_manager.entity.Customer;
+import whilter.ai.ads_manager.entity.FacebookProfile;
+import whilter.ai.ads_manager.entity.InstagramProfile;
 import whilter.ai.ads_manager.model.CustomerRegistrationDto;
 import whilter.ai.ads_manager.repository.CustomerRepository;
+import whilter.ai.ads_manager.repository.FacebookProfileRepository;
+import whilter.ai.ads_manager.repository.InstagramProfileRepository;
 import whilter.ai.ads_manager.utility.PasswordValidator;
 
 import java.time.Instant;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CustomerService{
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
+    private final FacebookProfileRepository facebookProfileRepository;
+    private final InstagramProfileRepository instagramProfileRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public CustomerService(CustomerRepository customerRepository, FacebookProfileRepository facebookProfileRepository, InstagramProfileRepository instagramProfileRepository, PasswordEncoder passwordEncoder) {
+        this.customerRepository = customerRepository;
+        this.facebookProfileRepository = facebookProfileRepository;
+        this.instagramProfileRepository = instagramProfileRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public void registerNewCustomer(CustomerRegistrationDto registrationDto) {
@@ -48,17 +60,28 @@ public class CustomerService{
         customer.setPhoneNumber(registrationDto.getPhoneNumber());
         customer.setCreatedAt(Instant.now());
         customer.setCompanyName(registrationDto.getCompanyName());
-
         // Encode and save password
         customer.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        Customer addedCustomer = customerRepository.save(customer);
+        log.info("Customer added successfully: {}", addedCustomer);
 
-        customerRepository.save(customer);
+        FacebookProfile facebookProfile = new FacebookProfile();
+        facebookProfile.setCustomer(addedCustomer);
+        facebookProfile.setLinkedStatus(false);
+        facebookProfileRepository.save(facebookProfile);
+        log.info("Facebook profile added successfully: {}", facebookProfile);
+
+        InstagramProfile instagramProfile = new InstagramProfile();
+        instagramProfile.setCustomer(addedCustomer);
+        instagramProfile.setLinkedStatus(false);
+        instagramProfileRepository.save(instagramProfile);
+        log.info("Instagram profile added successfully: {}", instagramProfile);
     }
-
-    public Optional<Customer> loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return customerRepository.findByUserName(username);
-    }
+//
+//    public Optional<Customer> loadUserByUsername(String username) throws UsernameNotFoundException {
+//
+//        return customerRepository.findByUserName(username);
+//    }
 
     public Optional<Customer> findByUsername(String username) {
         return customerRepository.findByUserName(username);

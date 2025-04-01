@@ -3,7 +3,7 @@ package whilter.ai.ads_manager.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import whilter.ai.ads_manager.model.OAuthToken;
+import whilter.ai.ads_manager.entity.OAuthToken;
 import whilter.ai.ads_manager.repository.OAuthTokenRepository;
 
 import java.time.Instant;

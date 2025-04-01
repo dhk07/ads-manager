@@ -33,7 +33,7 @@ public class FacebookProfile {
 
     private String emailId;
 
-    @Convert(converter = AttributeEncryptor.class)
+//    @Convert(converter = AttributeEncryptor.class)
     @Column( length = 1000)
     private String accessToken;
 

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CustomerRegistrationDto {
     @NotBlank(message = "Username is required")
@@ -28,4 +30,5 @@ public class CustomerRegistrationDto {
     private String companyName;
 
     private String phoneNumber;
+    private List<Dashboard> dashboardList;
 }

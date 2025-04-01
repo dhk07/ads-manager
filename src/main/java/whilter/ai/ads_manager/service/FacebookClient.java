@@ -53,12 +53,29 @@ public interface FacebookClient {
                                             @RequestParam("q") String query,
                                             @RequestParam("access_token") String accessToken);
     @GetMapping("/oauth/access_token")
-    ResponseEntity<Map<String, Object>> exchangeForLongLivedToken(
-            @RequestParam("grant_type") String grantType,
+    ResponseEntity<Map<String, Object>> exchangeForLongLivedToken(@RequestParam("grant_type") String grantType,
             @RequestParam("client_id") String clientId,
             @RequestParam("client_secret") String clientSecret,
-            @RequestParam("fb_exchange_token") String shortLivedToken
+            @RequestParam("fb_exchange_token") String shortLivedToken);
+
+    @GetMapping("/oauth/access_token")
+    Map<String, Object> getAccessToken(@RequestParam("client_id") String clientId,
+            @RequestParam("client_secret") String clientSecret,
+            @RequestParam("code") String authCode,
+            @RequestParam("redirect_uri") String redirectUri
     );
 
+    @GetMapping("/me")
+    Map<String, Object> getUserInfo(@RequestParam("fields") String fields,
+            @RequestParam("access_token") String accessToken);
+
+    // Fetch business pages the user manages
+    @GetMapping("/me/accounts")
+    Map<String, Object> getBusinessPages(@RequestParam("access_token") String accessToken);
+
+    // Fetch Instagram account details for a given Facebook Page ID
+    @GetMapping("/{pageId}")
+    Map<String, Object> getInstagramAccountDetails(@RequestParam("fields") String fields,
+            @RequestParam("access_token") String accessToken);
 }
 

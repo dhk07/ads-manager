@@ -14,7 +14,7 @@ import java.time.Instant;
 @ToString(exclude = {"facebookProfile", "instagramProfile"}) // Prevent recursion
 @EqualsAndHashCode(exclude = {"facebookProfile", "instagramProfile"}) // Prevent recursion
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

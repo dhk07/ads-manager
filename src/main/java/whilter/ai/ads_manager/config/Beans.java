@@ -1,4 +1,8 @@
 package whilter.ai.ads_manager.config;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.jasypt.salt.RandomSaltGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -18,7 +22,7 @@ import java.util.stream.Collectors;
 @Configuration
 public class Beans {
     private final Environment env;
-    private static final List<String> clients = Arrays.asList("facebook");
+    private static final List<String> clients = List.of("facebook");
 
     public Beans(Environment env) {
         this.env = env;
@@ -68,8 +72,18 @@ public class Beans {
         return new InMemoryOAuth2AuthorizedClientService(
                 clientRegistrationRepository());
     }
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+
+//    @Bean("jasyptStringEncryptor") // This name is required
+//    public StringEncryptor stringEncryptor() {
+//        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+//        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+//        config.setPassword(System.getenv("JASYPT_ENCRYPTOR_PASSWORD")); // Use env variable for security
+//        config.setAlgorithm("PBEWithMD5AndDES"); // Can be changed to a stronger algorithm
+//        config.setKeyObtentionIterations("1000");
+//        config.setPoolSize("1");
+//        config.setSaltGenerator(new RandomSaltGenerator());
+//        config.setStringOutputType("base64");
+//        encryptor.setConfig(config);
+//        return encryptor;
+//    }
 }
