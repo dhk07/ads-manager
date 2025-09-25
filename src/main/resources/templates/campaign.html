@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Facebook Ads Manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Facebook Ads Manager</h2>
+    <div class="mb-3">
+        <a href="/goDashboard" class="btn btn-dark">Back to Dashboard</a>
+    </div>
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="adsTab">
+        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#campaigns">Campaigns</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#adSets">Ad Sets</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#creatives">Creatives</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ads">Ads</a></li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="campaigns">
+            <h4>Campaigns</h4>
+            <button class="btn btn-primary" onclick="createCampaign()">Create Campaign</button>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Name</th><th>Status</th></tr></thead>
+                <tbody>
+                <tr th:each="campaign : ${campaigns}">
+                    <td th:text="${campaign.id}"></td>
+                    <td th:text="${campaign.name}"></td>
+                    <td th:text="${campaign.status}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="adSets">
+            <h4>Ad Sets</h4>
+            <button class="btn btn-primary" onclick="createAdSet()">Create Ad Set</button>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Name</th><th>Budget</th></tr></thead>
+                <tbody>
+                <tr th:each="adSet : ${adSets}">
+                    <td th:text="${adSet.id}"></td>
+                    <td th:text="${adSet.name}"></td>
+                    <td th:text="${adSet.budget}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="creatives">
+            <h4>Creatives</h4>
+            <button class="btn btn-primary" onclick="createCreative()">Create Creative</button>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Title</th><th>Image</th></tr></thead>
+                <tbody>
+                <tr th:each="creative : ${creatives}">
+                    <td th:text="${creative.id}"></td>
+                    <td th:text="${creative.title}"></td>
+                    <td><img th:src="${creative.imageUrl}" width="50" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="ads">
+            <h4>Ads</h4>
+            <button class="btn btn-primary" onclick="createAd()">Create Ad</button>
+            <table class="table table-bordered">
+                <thead><tr><th>ID</th><th>Name</th><th>Status</th></tr></thead>
+                <tbody>
+                <tr th:each="ad : ${ads}">
+                    <td th:text="${ad.id}"></td>
+                    <td th:text="${ad.name}"></td>
+                    <td th:text="${ad.status}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function createCampaign() {
+        alert("Create Campaign clicked");
+    }
+    function createAdSet() {
+        alert("Create Ad Set clicked");
+    }
+    function createCreative() {
+        alert("Create Creative clicked");
+    }
+    function createAd() {
+        alert("Create Ad clicked");
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

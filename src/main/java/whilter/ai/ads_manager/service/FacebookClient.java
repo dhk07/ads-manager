@@ -32,6 +32,11 @@ public interface FacebookClient {
     Map<String, Object> getMediaStatus(@PathVariable("mediaId") String mediaId,
                                        @RequestHeader("Authorization") String accessToken);
 
+    @GetMapping("/{campaignId}")
+    Map<String, Object> getCampaignDetails(@PathVariable("campaignId") String campaignId,
+                                        @RequestHeader("Authorization") String accessToken,
+                                        @RequestParam("fields") String fields);
+
     @PostMapping("/act_{adAccountId}/campaigns")
     CampaignResponse createCampaign(@PathVariable("adAccountId") String adAccountId,
                                     @RequestBody Map<String, Object> requestBody);

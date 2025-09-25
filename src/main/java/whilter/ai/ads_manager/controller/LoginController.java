@@ -55,7 +55,8 @@ public class LoginController {
                                Model model,
                                HttpSession httpSession) {
         log.info("Inside validateLogin endpoint: ");
-        model.addAttribute("userName", userName);
+//        model.addAttribute("userName", userName);
+        httpSession.setAttribute("userName", userName);
         Optional<Customer> existingCustomer = customerService.findByUsername(userName);
         if(existingCustomer.isEmpty()){
             model.addAttribute("error", "User does not exist in our system.");
@@ -143,5 +144,18 @@ public class LoginController {
             model.addAttribute("error", e.getMessage());
             return "change-password";
         }
+    }
+
+    @GetMapping("/goDashboard")
+    public String gotoDashboard(HttpSession httpSession,
+                                Model model){
+        String userName = (String) httpSession.getAttribute("userName");
+        Optional<Customer> existingCustomer = customerService.findByUsername(userName);
+
+        CustomerRegistrationDto customerDto = Utils.customerToCustomerDto(existingCustomer.get(), facebookCallBackUrl);
+        httpSession.setAttribute("existingCustomer", customerDto);
+        model.addAttribute("existingCustomer", customerDto);
+        httpSession.setAttribute("userId", existingCustomer.get().getId());
+        return "dashboard";
     }
 }
